@@ -1,0 +1,33 @@
+.catalog {
+    text-align: center;
+    background-color: #B7A3FF;
+}
+.left-item {
+    margin-bottom: 10px;
+    background-color: #879FFF;
+}
+.side-bar {
+  background: linear-gradient(#B7A3FF, #879FFF);
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+}
+.tools {
+    display: flex;
+    height: 50px;
+    margin-top: 10px;
+    margin-left: 10px;
+
+}
+.btn {
+    margin-left: 10px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 30px;
+    width: 80px;
+    height: 30px;
+    background-color: #8981D8;
+}
+.content {
+    padding: 10px 30px
+}

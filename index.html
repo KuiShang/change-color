@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style lang="css">
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    html,
+    body {
+        height: 100%;
+        /*高度百分百显示*/
+    }
+
+    .app {
+        height: 100%;
+    }
+
+    #left {
+        width: 300px;
+        height: 100%;
+        background-color: #ccc;
+        float: left;
+    }
+
+    #right {
+        height: 100%;
+        overflow: hidden;
+        background-color: #eee;
+    }
+</style>
+<link rel="stylesheet" href="theme.css">
+
+<body>
+    <div class="app">
+        <div id="left">
+            <ul class="catalog">
+                <li class="left-item">技术文章</li>
+                <li class="left-item">生活杂谈</li>
+                <li class="left-item">个人总结</li>
+                <li class="left-item">精选日志</li>
+            </ul>
+        </div>
+        <div id="right">
+            <div class="side-bar">
+                大标题
+            </div>
+            <div class="tools">
+                <div class="btn btn1">点我换色1</div>
+                <div class="btn btn2">点我换色2</div>
+                <div class="btn btn3">点我换色3</div>
+            </div>
+            <div class="content">
+                <h2>注意 预览项目需要用服务器，不可以以文件方式预览(file://) 推荐使用 http-server 插件 简单快捷</h2>
+                <p>
+                    关于 CSS 颜色的切换，我通过搜索，参考了 ElementUI 的方案，总的来说分为四步 在 static 目录下新建一个 theme.css 文件，将需要替换的 CSS 声明在此文件中 .side-bar { background: linear-gradient(#B7A3FF,
+                    #879FFF) !important; } .side-bar .account-info { background: #8981D8 !important; }
+                </p>
+                <p>
+                    由于项目刚开始做的时候并没有考虑到换肤的需求，于是所有图标都是采用 img 标签的方式引用的， 这样就导致无法给 icon 动态切换颜色了，所以，我决定改为 font 文件的方式来使用图标。这里推荐一个网站 icomoon ，这个网站可以轻松地将图片转换成
+                    font 文件。图标也非常适合通过 font 的方式来使用，我们可以更加方便的修改图标的大小和颜色。 通过在线转换，我们将下载下来的 font 文件放入项目中，并新建一个 CSS 文件来声明所有图标。
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="https://cdn.staticfile.org/axios/0.15.3/axios.js"></script>
+<script src="./color.js"></script>
+<script>
+    let btn1 = document.querySelector('.btn1')
+    let btn2 = document.querySelector('.btn2')
+    let btn3 = document.querySelector('.btn3')
+    btn1.addEventListener('click', function () {
+        changeColor(0)
+    })
+    btn2.addEventListener('click', function () {
+        changeColor(1)
+    })
+    btn3.addEventListener('click', function () {
+        changeColor(2)
+    })
+
+    function changeColor(idx) {
+        // console.log(axios)
+        getFile(`./theme.css`)
+            .then(({
+                data
+            }) => {
+                let style = getStyleTemplate(data)
+                writeNewStyle(style, colors[idx])
+            })
+    }
+
+    function getFile(path) {
+        return axios.get(path)
+            .then(function (response) {
+                // console.log(response);
+                return response
+            }).catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    function getStyleTemplate(data) {
+        // console.log(data)
+        Object.keys(colorMap).forEach(key => {
+            const value = colorMap[key]
+            data = data.replace(new RegExp(key, 'ig'), value)
+        })
+        // console.log(data)
+        return data
+    }
+
+    function writeNewStyle(originalStyle, colors) {
+        let oldEl = document.getElementById('temp-style')
+        let cssText = originalStyle
+        Object.keys(colors).forEach(key => {
+            cssText = cssText.replace(new RegExp(key, 'ig'), colors[key])
+        })
+        const style = document.createElement('style')
+        style.innerText = cssText
+        style.id = 'temp-style'
+        oldEl ? document.head.replaceChild(style, oldEl) : document.head.appendChild(style)
+
+    }
+</script>
+
+</html>
